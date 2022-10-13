@@ -3,8 +3,8 @@ from random import sample
 
 # Lista donde dentro hay una lista de links de fotos y preguntas
 preguntas_examen_PISA = {
-    1: ["/Users/spiegel/Documents/TEC/1 SEMESTRE/PENSAMIENTO COMPUTACIONAL/CODE/Proyecto Bloque/Screen Shot 2022-10-11 at 10.30.27.png", "/Users/spiegel/Documents/TEC/1 SEMESTRE/PENSAMIENTO COMPUTACIONAL/CODE/Proyecto Bloque/pregunta.txt"],
-    2: ["/Users/spiegel/Documents/TEC/1 SEMESTRE/PENSAMIENTO COMPUTACIONAL/CODE/Proyecto Bloque/Screen Shot 2022-10-11 at 18.29.55.png", "/Users/spiegel/Documents/TEC/1 SEMESTRE/PENSAMIENTO COMPUTACIONAL/CODE/Proyecto Bloque/pregunta (1).txt"]
+    1: ["./Screen Shot 2022-10-11 at 10.30.27.png", "./pregunta.txt"],
+    2: ["./Screen Shot 2022-10-11 at 18.29.55.png", "./pregunta (1).txt"]
 }
 
 # Lista de keys del diccionario en orden aleatorio sin repetir
