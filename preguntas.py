@@ -1,15 +1,17 @@
 from random import randint
 
 preguntas_examen_PISA = {
-    1 : ["/", "Hora: "],
-    2 : "123",
-    3 : "456"
+    1 : ["Path Foto", "Path Texto"],
+    2 : ["Path Foto", "Path Texto"]
 }
 
 def obtener_pregunta():
     '''
     Escoge una pregunta del diccionario de manera aleatoria
     '''
-    index = randint(0, len(preguntas_examen_PISA))
+    index = randint(1, len(preguntas_examen_PISA))
     pregunta = preguntas_examen_PISA[index]
-    return pregunta
+    imagen = pregunta[0]
+    texto = pregunta[1]
+    return imagen, texto
+
