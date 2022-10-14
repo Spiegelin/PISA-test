@@ -6,7 +6,7 @@ Gael
 '''
 from tkinter import *
 from tkinter import ttk
-from preguntas_PISA import obtener_pregunta, keys
+from preguntas_PISA import obtener_pregunta, posicion, keys
 
 # Crear Ventana Principal
 root = Tk() 
@@ -82,32 +82,39 @@ class pantallaPreguntas:
     imagen_pregunta, texto_pregunta = obtener_pregunta()
     imagen = PhotoImage(file=imagen_pregunta)
 
+    # Posición de cada elemento de las preguntas
+    xy_imagen, xy_texto, xy_respuesta = posicion()
+    
+    # Texto - Pregunta
     texto = Label(frm, 
         text=open(texto_pregunta).read(),
         font="Arial 20",
         fg="Black",
         bg="white"
         )
-    texto.place(x=400,y=400) 
+    texto.place(x=xy_texto[0],y=xy_texto[1]) 
 
     # Imagen - Pregunta
     photo = Label(frm, 
         image=imagen
         )
-    photo.place(x=50,y=50) 
+    photo.place(x=xy_imagen[0],y=xy_imagen[1])
 
     # Label - Respuesta
-    Label(frm, 
+    respuesta = Label(frm, 
         text="Respuesta:",
-        font="Arial 17",
+        font="Arial 20",
         fg="black",
         bg="white"
-        ).place(x=500,y=500) 
+        )
+    respuesta.place(x=xy_respuesta[0],y=xy_respuesta[1]) 
 
     # Escribir Respuesta
-    Entry(frm, 
-        textvariable=StringVar()
-        ).place(x=600,y=500)  
+    entrada_texto = Entry(frm, 
+        textvariable=StringVar(),
+        font="Arial 19"
+        )
+    entrada_texto.place(x=xy_respuesta[0]+130,y=xy_respuesta[1]) 
 
 # Tercera Parte
 class pantallaFinal:
@@ -151,10 +158,20 @@ def repetir():
     '''
     Elimina la pregunta pasada y manda a llamar una función para la nueva
     '''
+    keys.pop(0)
     if len(keys) > 0:
+        # Se cambia el texto y la foto por el de otra pregunta
         texto, imagen = cambiar() 
         pantallaPreguntas.texto.config(text=texto)
-        pantallaPreguntas.photo.config(image=imagen) 
+        pantallaPreguntas.photo.config(image=imagen)
+
+        # Se reasigna la posición de cada elemento de las preguntas
+        xy_imagen, xy_texto, xy_respuesta = posicion()
+        pantallaPreguntas.photo.place(x=xy_imagen[0],y=xy_imagen[1])
+        pantallaPreguntas.texto.place(x=xy_texto[0],y=xy_texto[1])
+        pantallaPreguntas.respuesta.place(x=xy_respuesta[0],y=xy_respuesta[1])
+        pantallaPreguntas.entrada_texto.place(x=xy_respuesta[0]+130,y=xy_respuesta[1])
+
     else:
         pantallaPreguntas.frm.destroy()
 
