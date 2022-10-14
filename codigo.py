@@ -118,8 +118,8 @@ class pantallaPreguntas:
 
 # Tercera Parte
 class pantallaFinal:
-    texto_salida = "/Users/spiegel/Documents/TEC/1 SEMESTRE/PENSAMIENTO COMPUTACIONAL/CODE/Proyecto Bloque/Preguntas/Final/salida.txt"
-    foto_salida = "/Users/spiegel/Documents/TEC/1 SEMESTRE/PENSAMIENTO COMPUTACIONAL/CODE/Proyecto Bloque/Preguntas/Final/Screen Shot 2022-10-13 at 12.47.45.png"
+    texto_salida = "./Final/salida.txt"
+    foto_salida = "./Final/Screen Shot 2022-10-13 at 12.47.45.png"
     imagen = PhotoImage(file=foto_salida)
     imagen = imagen.subsample(2) # Significa que reduces la foto 1/2 de su tamaño
 
