@@ -6,7 +6,7 @@ Gael
 '''
 from tkinter import *
 from tkinter import ttk
-from preguntas import obtener_pregunta, keys
+from preguntas_PISA import obtener_pregunta, keys
 
 # Crear Ventana Principal
 root = Tk() 
@@ -111,8 +111,8 @@ class pantallaPreguntas:
 
 # Tercera Parte
 class pantallaFinal:
-    texto_salida = "./salida.txt"
-    foto_salida = "./Screen Shot 2022-10-13 at 12.47.45.png"
+    texto_salida = "/Users/spiegel/Documents/TEC/1 SEMESTRE/PENSAMIENTO COMPUTACIONAL/CODE/Proyecto Bloque/Preguntas/Final/salida.txt"
+    foto_salida = "/Users/spiegel/Documents/TEC/1 SEMESTRE/PENSAMIENTO COMPUTACIONAL/CODE/Proyecto Bloque/Preguntas/Final/Screen Shot 2022-10-13 at 12.47.45.png"
     imagen = PhotoImage(file=foto_salida)
     imagen = imagen.subsample(2)
 
