@@ -6,7 +6,7 @@ Gael
 '''
 from tkinter import *
 from tkinter import ttk
-from preguntas_PISA import obtener_pregunta, posicion, keys
+from preguntas import obtener_pregunta, posicion, keys
 
 # Crear Ventana Principal
 root = Tk() 
@@ -34,7 +34,8 @@ class pantallaInicio:
     
     Éxito!""",
         font="Arial 30",
-        bg="white"
+        bg="white",
+        fg="black"
         ).place(x=300,y=200) 
 
 # Segunda Parte - Preguntas PISA
@@ -43,6 +44,8 @@ class pantallaPreguntas:
     Se crea una clase en donde están definidos el texto,
     la imagen de las preguntas, y todo lo que se observa en la pantalla
     '''
+    pantallaRespuestas = False
+    respuestaCorrecta = False
     # Ventana Secundaria
     frm = Frame(root, 
         height=1000,
@@ -56,16 +59,17 @@ class pantallaPreguntas:
         text="Enviar",
         font="Arial 17",
         fg="black",
-        #command=Poner función para que reciba lo ingresado por el usuario
+        command=lambda:display_text()
         )
     enviar.place(x=990,y=700)
+
 
     # Botón Sig. Pregunta
     siguiente = Button(frm, 
         text="Siguiente Pregunta",
         font="Arial 17",
         fg="black",
-        command=lambda:repetir() # Te lleva a la función repetir, la cual reinicia el valor de las variables, y así se generan las nuevas preguntas
+        command=lambda:repetir(), # Te lleva a la función repetir, la cual reinicia el valor de las variables, y así se generan las nuevas preguntas
         )
     siguiente.place(x=1100,y=700)
 
@@ -79,7 +83,7 @@ class pantallaPreguntas:
         )
     salir.place(x=1300,y=700) 
 
-    imagen_pregunta, texto_pregunta = obtener_pregunta() # Te da dos paths, uno a la imagen y otro al archivo txt
+    imagen_pregunta, texto_pregunta, respuesta_pregunta = obtener_pregunta() # Te da dos paths, uno a la imagen y otro al archivo txt
     imagen = PhotoImage(file=imagen_pregunta)
 
     # Posición de cada elemento de las preguntas
@@ -118,8 +122,9 @@ class pantallaPreguntas:
 
 # Tercera Parte
 class pantallaFinal:
-    texto_salida = "./Final/salida.txt"
-    foto_salida = "./Final/Screen Shot 2022-10-13 at 12.47.45.png"
+    contadorCorrectas = 0
+    texto_salida = "drive-download-20221014T003101Z-001/pantallaFinal/salida.txt"
+    foto_salida = "drive-download-20221014T003101Z-001/pantallaFinal/imagenFinal.png"
     imagen = PhotoImage(file=foto_salida)
     imagen = imagen.subsample(2) # Significa que reduces la foto 1/2 de su tamaño
 
@@ -134,17 +139,26 @@ class pantallaFinal:
     # Texto Final
     texto = Label(final, 
         text=open(texto_salida).read(),
-        font="Arial 20",
+        font="Arial 35",
         fg="Black",
         bg="white"
         )
-    texto.place(x=400,y=600)
+    texto.place(x=550,y=50)
+
+    # Puntuacion
+    puntuacion = Label(final, 
+        text="Ninguna respuesta correcta. \nPractica más!",
+        font="Arial 35",
+        fg="Black",
+        bg="white"
+        )
+    puntuacion.place(x=475,y=550)
     
     # Imagen final
     photo = Label(final, 
         image=imagen
     )
-    photo.place(x=440,y=150)
+    photo.place(x=470,y=150)
     
     # Finalizar
     Button(final,
@@ -158,30 +172,68 @@ def repetir():
     '''
     Elimina la pregunta pasada y manda a llamar una función para la nueva
     '''
-    keys.pop(0) # Se elimina el primer índice de la lista de keys, para que así se cambie a otra pregunta
-    if len(keys) > 0:
-        # Se cambia el texto y la foto por el de otra pregunta
-        texto, imagen = cambiar() 
-        pantallaPreguntas.texto.config(text=texto) # Se edita y actualiza el valor de text por el nuevo tras usar la función
-        pantallaPreguntas.photo.config(image=imagen) # Se edita y actualiza la imagen por la nueva tras usar la función
+    if pantallaPreguntas.pantallaRespuestas == True:
+        pantallaPreguntas.pantallaRespuestas = False
+        if len(keys) > 0:
+            if pantallaPreguntas.respuestaCorrecta == True:
+                imagen = PhotoImage(file="drive-download-20221014T003101Z-001/IconosRespuestas/Screen Shot 2022-10-19 at 21.54.31.png")
+                pantallaFinal.contadorCorrectas += 1
+                pantallaFinal.puntuacion.config(text=f"   Respuestas correctas: {pantallaFinal.contadorCorrectas}")
 
-        # Se reasigna la posición de cada elemento de las preguntas
-        xy_imagen, xy_texto, xy_respuesta = posicion()
-        pantallaPreguntas.photo.place(x=xy_imagen[0],y=xy_imagen[1]) # Lo mismo que arriba, se actualiza el valor de las coordenadas x-y
-        pantallaPreguntas.texto.place(x=xy_texto[0],y=xy_texto[1])
-        pantallaPreguntas.respuesta.place(x=xy_respuesta[0],y=xy_respuesta[1])
-        pantallaPreguntas.entrada_texto.place(x=xy_respuesta[0]+130,y=xy_respuesta[1])
+            elif pantallaPreguntas.respuestaCorrecta == False:
+                imagen = PhotoImage(file="drive-download-20221014T003101Z-001/IconosRespuestas/Screen Shot 2022-10-19 at 21.57.25.png")
+
+            imagen = imagen.subsample(2) # Significa que reduces la foto 1/2 de su tamaño
+            pantallaPreguntas.photo.image = imagen
+            pantallaPreguntas.texto.config(text="") # Se edita y actualiza el valor de text por el nuevo tras usar la función
+            pantallaPreguntas.photo.config(image=imagen) # Se edita y actualiza la imagen por la nueva tras usar la función
+            pantallaPreguntas.photo.place(x=350,y=165)
+            pantallaPreguntas.enviar.place_forget()
+            pantallaPreguntas.entrada_texto.place_forget()
+            pantallaPreguntas.respuesta.place_forget()
+            pantallaPreguntas.entrada_texto.delete(0, END)
+            pantallaPreguntas.entrada_texto.insert(0, "")
+        else:
+            pantallaPreguntas.frm.destroy() # Se cierra la ventana secundaria
+
     else:
-        pantallaPreguntas.frm.destroy() # Se cierra la ventana secundaria
+        keys.pop(0) # Se elimina el primer índice de la lista de keys, para que así se cambie a otra pregunta
+        if len(keys) > 0:
+            texto, imagen, respuesta = cambiar() 
+            pantallaPreguntas.texto.config(text=texto) # Se edita y actualiza el valor de text por el nuevo tras usar la función
+            pantallaPreguntas.photo.config(image=imagen) # Se edita y actualiza la imagen por la nueva tras usar la función
+
+            # Se reasigna la posición de cada elemento de las preguntas
+            xy_imagen, xy_texto, xy_respuesta = posicion()
+            pantallaPreguntas.photo.place(x=xy_imagen[0],y=xy_imagen[1]) # Lo mismo que arriba, se actualiza el valor de las coordenadas x-y
+            pantallaPreguntas.texto.place(x=xy_texto[0],y=xy_texto[1])
+            pantallaPreguntas.respuesta.place(x=xy_respuesta[0],y=xy_respuesta[1])
+            pantallaPreguntas.entrada_texto.place(x=xy_respuesta[0]+130,y=xy_respuesta[1])
+            pantallaPreguntas.respuesta_pregunta = respuesta
+            pantallaPreguntas.enviar.place(x=990,y=700)
+        else:
+            pantallaPreguntas.frm.destroy() # Se cierra la ventana secundaria
+
 
 def cambiar():
     '''
     Cambia el texto y la imagen
     '''
-    imagen_pregunta, texto_pregunta = obtener_pregunta()
+    imagen_pregunta, texto_pregunta, respuesta_pregunta = obtener_pregunta()
     texto=open(texto_pregunta).read()
     imagen = PhotoImage(file=imagen_pregunta)
+    respuesta = respuesta_pregunta
     pantallaPreguntas.photo.image = imagen # Se hace porque sino la imagen no se actualiza y se ve gris
-    return texto, imagen
+    return texto, imagen, respuesta
+
+def display_text():
+    pantallaPreguntas.pantallaRespuestas = True
+    string = pantallaPreguntas.entrada_texto.get()
+    respuesta=pantallaPreguntas.respuesta_pregunta
+    if (string == respuesta):
+        pantallaPreguntas.respuestaCorrecta = True
+    else: 
+        pantallaPreguntas.respuestaCorrecta = False
+    repetir()
 
 root.mainloop()
